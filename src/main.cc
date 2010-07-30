@@ -131,6 +131,7 @@ int main(int argc, char *argv[])
 		y0=heroe.getY();
 		s0=heroe.estado_actual();
 		
+		//Control de los FPS
 		time=sincronizar_fps();
 		salir(evento);
 		heroe.Actualizar(mapa);
