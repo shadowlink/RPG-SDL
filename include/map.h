@@ -1,25 +1,27 @@
 #ifndef __MAP__
 #define __MAP__
 #include <iostream>
-#include "map.h"
 #include "images.h"
+#include <irrXML.h>
 
 using namespace std;
 
 class Tile{
 	public:
 		Tile();
-		Tile(bool, char);
+		Tile(bool, string);
 		~Tile();
 		bool getSolido();
-		char getTileId();
+		void setSolido(bool);
+		string getTileId();
+		void setTileId(string);
 		void setX(int);
 		void setY(int);
 		int getX();
 		int getY();
 	private:
 		bool solido;
-		char TileId;
+		string TileId;
 		int posX;
 		int posY;
 };
@@ -33,9 +35,10 @@ class Map{
 		Tile getTile(int, int);
 		bool getSolido(int, int);
 	private:
-		void ProcesarLinea(string, int);
 		int id;
-		Tile mimapa[15][20];
+		Tile suelo[15][20];
+		Tile solido[15][20];
+		
 };
 
 #endif
