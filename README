@@ -1,0 +1,2 @@
+-------------R1---------------
+-Clase Map totalmente renovada, ahora carga los mapas .tmx generados por Tiled siempre que no esten codificados ni comprimidos.
