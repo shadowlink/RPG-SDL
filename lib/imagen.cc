@@ -97,8 +97,8 @@ void Imagen::dibujar(SDL_Surface *superficie, int i, int x, int y, int flip)
     // Separaciones de 2 píxeles dentro de las rejillas para observar
     // bien donde empieza una imagen y donde termina la otra
 
-    origen.w = w - 2;
-    origen.h = h - 2;
+    origen.w = w;
+    origen.h = h;
 
     // Seleccionamos cual de las imágenes es la que vamos a dibujar
     switch(flip) {
@@ -108,7 +108,7 @@ void Imagen::dibujar(SDL_Surface *superficie, int i, int x, int y, int flip)
 	 // Cálculo de la posición de la imagen
 	 // dentro de la rejilla
 	 
-	 origen.x = ((i % columnas) * w);
+	 origen.x = (((i % columnas)) * w);
 	 origen.y = ((i / columnas) * h);
 			
 	 SDL_BlitSurface(imagen, &origen, superficie, &destino);

@@ -8,7 +8,7 @@ Actor::Actor(string imagen)
 {
 	this->imagen=imagen;
 	posX=32;
-	posY=32;
+	posY=64;
     estado = PARADO;
     galeria_animaciones[PARADO_DERECHA] =
 	new Animacion("resources/graphics/charasets/link.png", 4, 10, "30", 0);
