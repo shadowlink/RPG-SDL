@@ -1,7 +1,7 @@
 .PHONY= doc clean
 
 CC=g++
-OPTIONS= -g -Wall -lSDL -lSDL_image -lSDL_ttf -DDEBUG -ltinyxml
+OPTIONS= -g -Wall -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer -DDEBUG
 LIBDIR=lib
 INCLUDEDIR=include
 _OBJ= images.o actor.o Teclado.o control_animacion.o imagen.o animacion.o map.o irrXML.o

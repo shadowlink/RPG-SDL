@@ -88,7 +88,7 @@ void Map::CargarMapa()
 {	
 	//TiXmlDocument *doc = new TiXmlDocument("agenda.xml");
 
-	int y=0, x=0, i=0, j=0;
+	int y=0, x=0, i=0, j=0, t=0, h=0, r=0, s=0;
 	IrrXMLReader* xml = createIrrXMLReader("maps/mapa.tmx");
 	std::string capa;
 	std::string gid;
@@ -128,6 +128,25 @@ void Map::CargarMapa()
 								x++;								
 							}
 						}
+						else if(capa=="Suelo2")
+						{
+							if(t<20) //Final de la linea
+							{
+								mitile.setTileId(gid);
+								mitile.setSolido(false);
+								suelo2[h][t]=mitile;
+								t++;
+							}
+							else
+							{
+								t=0;
+								h++;
+								mitile.setTileId(gid);
+								mitile.setSolido(false);
+								suelo2[h][t]=mitile;
+								t++;								
+							}
+						}
 						else if(capa=="Solido")
 						{
 							if(j<20) //Final de la linea
@@ -135,7 +154,6 @@ void Map::CargarMapa()
 								mitile.setTileId(gid);
 								if(gid!="0")
 								{
-									cout<<gid<<endl;
 									mitile.setSolido(true);
 								}
 								else
@@ -162,6 +180,25 @@ void Map::CargarMapa()
 								j++;								
 							}							
 						}
+						else if(capa=="Frontal")
+						{
+							if(r<20) //Final de la linea
+							{
+								mitile.setTileId(gid);
+								mitile.setSolido(false);
+								frontal[s][r]=mitile;
+								r++;
+							}
+							else
+							{
+								r=0;
+								s++;
+								mitile.setTileId(gid);
+								mitile.setSolido(false);
+								frontal[s][r]=mitile;
+								r++;								
+							}
+						}
 					}
 				}
 			}
@@ -187,12 +224,32 @@ void Map::DibujarMapa(SDL_Surface* screen)
 			strcpy(buffer, suelo[i][j].getTileId().c_str());
 			id=atoi(buffer)-1;
 			img->dibujar(screen, id ,32*j, 32*i);
+			strcpy(buffer, suelo2[i][j].getTileId().c_str());
+			id=atoi(buffer)-1;
+			img->dibujar(screen, id ,32*j, 32*i);
 			strcpy(buffer, solido[i][j].getTileId().c_str());
 			id=atoi(buffer)-1;
 			img->dibujar(screen, id ,32*j, 32*i);
 		}
 	}
 	delete img;
+}
+
+void Map::DibujaTras(SDL_Surface* screen)
+{
+	char buffer[34];
+	int id;
+	Imagen* img=new Imagen("resources/graphics/tilesets/camp.png", 19, 8, 0, 255, 0);
+	for(int i=0; i<15; i++)
+	{
+		for(int j=0; j<20; j++)
+		{
+			strcpy(buffer, frontal[i][j].getTileId().c_str());
+			id=atoi(buffer)-1;
+			img->dibujar(screen, id ,32*j, 32*i);
+		}
+	}
+	delete img;	
 }
 
 bool Map::getSolido(int x, int y)

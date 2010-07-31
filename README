@@ -1,3 +1,11 @@
+-------------R3---------------
+-Añadida musica de prueba.
+-Añadido soporte para 2 capas mas en el mapa quedando de la siguiente manera:
+Suelo: primera capa traspasable.
+Suelo2: segunda capa traspasable.
+Solido: capa de solidos
+Frontal: capa de objetos atravesables por detras.
+
 -------------R2---------------
 -Corregida una fuga de memoria en la clase Map.
 

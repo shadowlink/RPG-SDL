@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include <SDL/SDL_mixer.h>
 #include <iostream>
 #include "actor.h"
 #include "imagen.h"
@@ -8,7 +9,6 @@
 #include "Teclado.h"
 #include "animacion.h"
 #include "map.h"
-
 
 using namespace std;
 
@@ -92,8 +92,10 @@ int main(int argc, char *argv[])
     SDL_Rect posicion;
     
     iniciarSDL();
+    Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 4096);
     atexit(TTF_Quit); 
-	atexit(SDL_Quit);            // Al salir, cierra SDL
+    atexit(Mix_CloseAudio);
+	atexit(SDL_Quit);        
 	
     // Establecemos el modo de pantalla
 	screen= SDL_SetVideoMode(WIDTH, HEIGHT, 0, SDL_ANYFORMAT | SDL_HWSURFACE | SDL_DOUBLEBUF);
@@ -115,10 +117,14 @@ int main(int argc, char *argv[])
 	posicion.h=480;
 	//------------------------------------------------------
 	
+	Mix_Music *mainTheme;
+	mainTheme=Mix_LoadMUS("resources/music/z3.mid");
+	Mix_FadeInMusic(mainTheme, -1, 1500);
 	Map* mapa=new Map(1);
 	mapa->CargarMapa();
 	mapa->DibujarMapa(screen);
 	Actor heroe("resources/graphics/charasets/heroe.bmp");
+	mapa->DibujaTras(screen);
 	heroe.Dibujar(screen);
 	
 	int x0, y0;
@@ -137,10 +143,10 @@ int main(int argc, char *argv[])
 		
 		if(x0 != heroe.getX() || y0 != heroe.getY() || s0 != heroe.estado_actual()) 
 		{
-			cout<<"Hola"<<endl;
 			SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 			mapa->DibujarMapa(screen);	
 			heroe.Dibujar(screen);
+			mapa->DibujaTras(screen);
 		}
 		//camara.update(screen, heroe);
 		SDL_BlitSurface(rejilla, NULL, screen, &posicion);
