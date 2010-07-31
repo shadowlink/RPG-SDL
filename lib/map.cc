@@ -192,6 +192,7 @@ void Map::DibujarMapa(SDL_Surface* screen)
 			img->dibujar(screen, id ,32*j, 32*i);
 		}
 	}
+	delete img;
 }
 
 bool Map::getSolido(int x, int y)
