@@ -2,13 +2,12 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include <iostream>
-#include "map.h"
 #include "actor.h"
 #include "imagen.h"
 #include "images.h"
 #include "Teclado.h"
 #include "animacion.h"
-
+#include "map.h"
 
 
 using namespace std;
@@ -19,7 +18,7 @@ const int HEIGHT=480;
 int sincronizar_fps(void) {
     static int t0;
     static int tl = SDL_GetTicks();
-    static int frecuencia = 2500 / 100;
+    static int frecuencia = 4000 / 100;
     static int tmp;
 
 #ifdef FPS
@@ -138,6 +137,7 @@ int main(int argc, char *argv[])
 		
 		if(x0 != heroe.getX() || y0 != heroe.getY() || s0 != heroe.estado_actual()) 
 		{
+			cout<<"Hola"<<endl;
 			SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 			mapa->DibujarMapa(screen);	
 			heroe.Dibujar(screen);
