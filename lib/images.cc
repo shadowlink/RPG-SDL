@@ -35,6 +35,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
     }
 }
 
+//Carga una imagen
 SDL_Surface* load_image(char dir[], bool transparent)
 {
 	SDL_Surface *imagen;

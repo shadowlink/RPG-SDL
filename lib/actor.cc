@@ -4,7 +4,8 @@
 #include <cstdlib>
 #include <cmath>
 
-Actor::Actor(string imagen)
+//Constructor sobrecargado
+Actor::Actor(const string imagen)
 {
 	this->imagen=imagen;
 	posX=32;
@@ -28,23 +29,27 @@ Actor::Actor(string imagen)
 	new Animacion("resources/graphics/charasets/link.png", 4, 10, "10,11,12,13,14,15,16,17,18,19", 0);
 }
 
+//Destructor
 Actor::~Actor()
 {
 	posX=0;
 	posY=0;
 }
 
-int Actor::getX()
+//Devuelve la coordenada X
+Uint32 Actor::getX()const
 {
 	return posX;
 }
 
-int Actor::getY()
+//Devuelve la coordenada Y
+Uint32 Actor::getY()const
 {
 	return posY;
 }
 
-int Actor::Arriba(Map* mapa)
+//Mueve el personaje hacia arriba
+void Actor::Arriba(const Map* mapa)
 {
 	if(!ColisionMapaArriba(mapa))
 	{
@@ -52,7 +57,8 @@ int Actor::Arriba(Map* mapa)
 	}
 }
 
-int Actor::Abajo(Map* mapa)
+//Mueve el personaje hacia abajo
+void Actor::Abajo(const Map* mapa)
 {
 	if(!ColisionMapaAbajo(mapa))
 	{
@@ -60,7 +66,8 @@ int Actor::Abajo(Map* mapa)
 	}
 }
 
-int Actor::Derecha(Map* mapa)
+//Mueve el personaje hacia la derecha
+void Actor::Derecha(const Map* mapa)
 {
 	if(!ColisionMapaDerecha(mapa))
 	{
@@ -68,7 +75,8 @@ int Actor::Derecha(Map* mapa)
 	}
 }
 
-int Actor::Izquierda(Map* mapa)
+//Mueve el personaje hacia la izquierda
+void Actor::Izquierda(const Map* mapa)
 {
 	if(!ColisionMapaIzquierda(mapa))
 	{
@@ -76,6 +84,7 @@ int Actor::Izquierda(Map* mapa)
 	}
 }
 
+//Dibuja la animacion del personaje segun su estado actual
 void Actor::Dibujar(SDL_Surface* screen)
 {
 	switch(estado) {
@@ -120,68 +129,47 @@ void Actor::Dibujar(SDL_Surface* screen)
     }
 }
 
+//Cambia el estado del personaje
 void Actor::cambio_estado(estados_personaje e)
 {
 	estado=e;
 }
 
-estados_personaje Actor::estado_actual(void) 
+//Devuelve el estado actual del personaje
+estados_personaje Actor::estado_actual() const
 {
     return estado;
 }
 
-bool Actor::ColisionMapaDerecha(Map* mapa)
+//Comprueba si colisiona con la baldosa de la derecha
+bool Actor::ColisionMapaDerecha(const Map* mapa) const
 {
-	/*bool solido=false;
-	int compruebaX=(posX/32)+1;
-	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-	cout<<posX<<"/32="<<posX/32<<endl;
-	#endif
-	
-	if(mapa->getSolido(posY/32, compruebaX))
-	{
-		solido=true;
-	}
-	return solido;*/
 	bool solido=false;
-	int compruebaX;
-	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	if(posX%32!=0) //Si no es entero
+	Uint32 compruebaX;
+
+	//Comprobamos si estamos en el centro de una baldosa
+	//Calculamos la posicion de la baldosa a comprobar en consecuencia
+	if(posX%TWIDTH!=0) //No lo estamos
 	{
-		cout<<"No estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<floor((posX/32))<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;
-		compruebaX=floor((posX/32)+1);
+		compruebaX=floor((posX/TWIDTH)+1);
 	}
-	else // si es entero
+	else //Lo estamos
 	{
-		cout<<"Estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;	
-		compruebaX=posX/32+1;	
+		compruebaX=posX/TWIDTH+1;	
 	}	
-	#endif
-	if(posX+32<608)
+
+	//Si estamos dentro de los limites del mapa
+	if(posX+TWIDTH<WIDTH-TWIDTH)
 	{
-		if(mapa->getSolido(posY/32, compruebaX))
+		//Comprobamos si la baldosa que hemos calculado es solida
+		if(mapa->getSolido(posY/THEIGHT, compruebaX))
 		{
 			solido=true;
 		}
-		else if (posY%32!=0)
+		else if (posY%THEIGHT!=0)
 		{
-			if (mapa->getSolido((posY/32)+1, compruebaX))
+			if (mapa->getSolido((posY/THEIGHT)+1, compruebaX))
 				solido=true;
-			else if(mapa->getSolido((posY/32)-1, compruebaX))
-			{
-				//solido=true;
-			}
 		}
 	}
 	else
@@ -191,60 +179,31 @@ bool Actor::ColisionMapaDerecha(Map* mapa)
 
 }
 
-bool Actor::ColisionMapaIzquierda(Map* mapa)
+//Comprueba si colisiona con la baldosa de la izquierda
+bool Actor::ColisionMapaIzquierda(const Map* mapa) const 
 {
-	/*bool solido=false;
-	int compruebaX=(posX/32)-1;
-	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-	cout<<posY<<"/32="<<posY/32<<endl;
-	#endif
-	
-	if(mapa->getSolido(posY/32, compruebaX))
-	{
-		solido=true;
-	}
-	return solido;*/
 	bool solido=false;
-	int compruebaX;
+	Uint32 compruebaX;
 	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	if(posX%32!=0) //Si no es entero
+	if(posX%TWIDTH!=0) //Si no es entero
 	{
-		cout<<"No estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<floor((posX/32))<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;
-		compruebaX=floor((posX/32));
+		compruebaX=floor((posX/TWIDTH));
 	}
 	else // si es entero
 	{
-		cout<<"Estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;	
-		compruebaX=posX/32-1;	
+		compruebaX=posX/TWIDTH-1;	
 	}	
-	#endif
-	if(posX>32)
+
+	if(posX>TWIDTH)
 	{
-		if(mapa->getSolido(posY/32, compruebaX))
+		if(mapa->getSolido(posY/THEIGHT, compruebaX))
 		{
 			solido=true;
 		}
-		else if (posY%32!=0)
+		else if (posY%THEIGHT!=0)
 		{
-			if (mapa->getSolido((posY/32)+1, compruebaX))
-			{
+			if (mapa->getSolido((posY/THEIGHT)+1, compruebaX))
 				solido=true;
-			}
-			else if(mapa->getSolido((posY/32)-1, compruebaX))
-			{
-				//solido=true;
-			}
 		}
 	}
 	else
@@ -253,60 +212,31 @@ bool Actor::ColisionMapaIzquierda(Map* mapa)
 	return solido;
 }
 
-bool Actor::ColisionMapaArriba(Map* mapa)
+//Comprueba si colisiona con la baldosa de arriba
+bool Actor::ColisionMapaArriba(const Map* mapa) const
 {
-/*	bool solido=false;
-	int compruebaY=(posY/32)-1;
-	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-	cout<<posY<<"/32="<<posY/32<<endl;
-	#endif
-	
-	if(mapa->getSolido(compruebaY, posX/32))
-	{
-		solido=true;
-	}
-	return solido;*/
-	
 	bool solido=false;
-	int compruebaY;
+	Uint32 compruebaY;
 	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	if(posY%32!=0) //Si no es entero
+	if(posY%THEIGHT!=0) //Si no es entero
 	{
-		cout<<"No estoy en entero"<<endl;
-		cout<<"Pos: ["<<floor((posY/32))<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;
-		compruebaY=floor((posY/32));
+		compruebaY=floor((posY/THEIGHT));
 	}
 	else // si es entero
 	{
-		cout<<"Estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;	
-		compruebaY=posY/32-1;	
+		compruebaY=posY/THEIGHT-1;	
 	}	
-	#endif
 	
-	if(posY>32)
+	if(posY>THEIGHT)
 	{
-		if(mapa->getSolido(compruebaY, posX/32))
+		if(mapa->getSolido(compruebaY, posX/TWIDTH))
 		{
 			solido=true;
 		}
-		else if (posX%32!=0)
+		else if (posX%TWIDTH!=0)
 		{
-			if (mapa->getSolido(compruebaY, (posX/32)+1))
+			if (mapa->getSolido(compruebaY, (posX/TWIDTH)+1))
 				solido=true;
-			else if(mapa->getSolido(compruebaY, (posX/32)-1))
-			{
-				//solido=true;
-			}
 		}
 	}
 	else
@@ -314,58 +244,31 @@ bool Actor::ColisionMapaArriba(Map* mapa)
 	return solido;
 }
 
-bool Actor::ColisionMapaAbajo(Map* mapa)
+//Comprueba si colisiona con la baldosa de abajo
+bool Actor::ColisionMapaAbajo(const Map* mapa) const 
 {
-	/*bool solido=false;
-	int compruebaY=(posY/32)+1;
-	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-	cout<<posY<<"/32="<<posY/32<<endl;
-	#endif
-	
-	if(mapa->getSolido(compruebaY, posX/32))
-	{
-		solido=true;
-	}
-	return solido;*/
 	bool solido=false;
-	int compruebaY;
+	Uint32 compruebaY;
 	
-	#ifdef DEBUG
-	cout<<"y="<<posY<<endl;
-	cout<<"x="<<posX<<endl;
-	if(posY%32!=0) //Si no es entero
+	if(posY%THEIGHT!=0) //Si no es entero
 	{
-		cout<<"No estoy en entero"<<endl;
-		cout<<"Pos: ["<<floor((posY/32))<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;
-		compruebaY=floor((posY/32));
+		compruebaY=floor((posY/THEIGHT));
 	}
 	else // si es entero
 	{
-		cout<<"Estoy en entero"<<endl;
-		cout<<"Pos: ["<<posY/32<<"]["<<posX/32<<"]"<<endl;
-		cout<<posX<<"/32="<<posX/32<<endl;	
-		compruebaY=(posY/32)+1;	
+		compruebaY=(posY/THEIGHT)+1;	
 	}	
-	#endif
-	if(posY+32<448)
+
+	if(posY+THEIGHT<HEIGHT-THEIGHT)
 	{
-		if(mapa->getSolido(compruebaY, posX/32))
+		if(mapa->getSolido(compruebaY, posX/TWIDTH))
 		{
 			solido=true;
 		}
-		else if (posX%32!=0)
+		else if (posX%TWIDTH!=0)
 		{
-			if (mapa->getSolido(compruebaY, (posX/32)+1))
+			if (mapa->getSolido(compruebaY, (posX/TWIDTH)+1))
 				solido=true;
-			else if(mapa->getSolido(compruebaY, (posX/32)-1))
-			{
-				//solido=true;
-			}
 		}
 	}
 	else
@@ -374,19 +277,18 @@ bool Actor::ColisionMapaAbajo(Map* mapa)
 	return solido;
 }
 
-void Actor::Actualizar(Map* mapa)
+//Actualiza el estado del personaje a partir de una maquina de estados
+void Actor::Actualizar(const Map* mapa)
 {
 	teclado.actualizar();
 	
-	//ESTADOS
+	//Construimos una maquina de estados y sus transiciones
 	switch(estado_actual()) 
 	{	
 	 case PARADO:	 
 		 if(teclado.pulso(Teclado::TECLA_DERECHA))
-			// Si "->" cambio de estado a parado derecha
 			cambio_estado(PARADO_DERECHA);
 		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA))
-			// Si "<-" cambio de estado a parado izquierda 
 			cambio_estado(PARADO_IZQUIERDA);
 		 else if(teclado.pulso(Teclado::TECLA_SUBIR))
 			cambio_estado(PARADO_ARRIBA);

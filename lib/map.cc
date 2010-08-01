@@ -1,111 +1,131 @@
 #include <iostream>
-#include "map.h"
-#include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <SDL/SDL_ttf.h>
-#include <string>
-#include "animacion.h"
+#include "map.h"
 #include "imagen.h"
 
-
 using namespace std;
-using namespace irr; // irrXML is located in the namespace irr::io
+using namespace irr;
 using namespace io;
 
+//##############Clase Tile#########################
+
+//Constructor por defecto
 Tile::Tile()
 {
 	TileId="";
 	solido=false;
+	posX=0;
+	posY=0;
 }
 
-Tile::Tile(bool sol, string tilid)
+//Constructor sobrecargado
+Tile::Tile(const bool sol, const string tilid)
 {
 	TileId=tilid;
 	solido=sol;
+	posX=0;
+	posY=0;
 }
 
+//Destructor
 Tile::~Tile()
 {
 	TileId=' ';
 	solido=false;	
+	posX=0;
+	posY=0;
 }
 
-bool Tile::getSolido()
+//Devuelve el estado solido de una baldosa
+bool Tile::getSolido() const
 {
 	return solido;
 }
 
-string Tile::getTileId()
+//Devuelve el Id de la imagen de la baldosa
+string Tile::getTileId() const
 {
 	return TileId;
 }
 
-void Tile::setX(int x)
+//Establece la coordenada X de la baldosa
+void Tile::setX(const Uint32 x)
 {
 	posX=x;
 }
 
-void Tile::setY(int y)
+//Establece la coordenada Y de la baldosa
+void Tile::setY(const Uint32 y)
 {
 	posY=y;
 }
 
-int Tile::getX()
+//Devuelve la coordenada X de la baldosa
+Uint32 Tile::getX() const
 {
 	return posX;
 }
 
-int Tile::getY()
+//Devuelve la coordenada Y de la baldosa
+Uint32 Tile::getY() const
 {
 	return posY;
 }
 
-void Tile::setTileId(string id)
+//Establece la Id de la imagen de la baldosa
+void Tile::setTileId(const string id)
 {
 	TileId=id;
 }
 
-void Tile::setSolido(bool solido)
+//Establece si una baldosa es sólida o no
+void Tile::setSolido(const bool solido)
 {
 	this->solido=solido;
 }
 
 
-//MAP
+//##############Clase Map#########################
 
-Map::Map(int num)
+//Constructor sobrecargado
+Map::Map(const Uint32 num)
 {
 	id=num;
 }
 
+//Destructor
 Map::~Map()
 {
 	id=0;
 }
 
+//Lee el archivo .tmx y carga cada capa del mapa en una matriz bidimensional
 void Map::CargarMapa()
 {	
-	//TiXmlDocument *doc = new TiXmlDocument("agenda.xml");
-
-	int y=0, x=0, i=0, j=0, t=0, h=0, r=0, s=0;
+	int y=0, x=0, t=0, h=0;
+	//Cargamos el mapa
 	IrrXMLReader* xml = createIrrXMLReader("maps/mapa.tmx");
 	std::string capa;
 	std::string gid;
 	Tile mitile;
 	
+	//Leemos el mapa
 	while(xml && xml->read())
 	{
 		switch(xml->getNodeType())
 		{
+			//Caso de que sea una etiqueta de tipo elemento
 			case EXN_ELEMENT:
 			{
+				//Si es un "layer" comprobamos cual es y lo guardamos
 				if (!strcmp("layer", xml->getNodeName()))
 				{
 					capa = xml->getAttributeValue("name");
 				}
 				else
 				{
+					//Si encontramos un elemnto "tile" comprobamos en que capa estamos
+					//y lo guardamos en la matriz correspondiente
 					if (!strcmp("tile", xml->getNodeName()))
 					{
 						gid = xml->getAttributeValue("gid");
@@ -130,6 +150,8 @@ void Map::CargarMapa()
 						}
 						else if(capa=="Suelo2")
 						{
+							x=0;
+							y=0;
 							if(t<20) //Final de la linea
 							{
 								mitile.setTileId(gid);
@@ -149,7 +171,9 @@ void Map::CargarMapa()
 						}
 						else if(capa=="Solido")
 						{
-							if(j<20) //Final de la linea
+							h=0;
+							t=0;
+							if(x<20) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								if(gid!="0")
@@ -160,13 +184,13 @@ void Map::CargarMapa()
 								{
 									mitile.setSolido(false);
 								}
-								solido[i][j]=mitile;
-								j++;
+								solido[y][x]=mitile;
+								x++;
 							}
 							else
 							{
-								j=0;
-								i++;
+								x=0;
+								y++;
 								mitile.setTileId(gid);
 								if(gid!="0")
 								{
@@ -176,27 +200,27 @@ void Map::CargarMapa()
 								{
 									mitile.setSolido(false);
 								}
-								solido[i][j]=mitile;
-								j++;								
+								solido[y][x]=mitile;
+								x++;								
 							}							
 						}
 						else if(capa=="Frontal")
 						{
-							if(r<20) //Final de la linea
+							if(t<20) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								mitile.setSolido(false);
-								frontal[s][r]=mitile;
-								r++;
+								frontal[h][t]=mitile;
+								t++;
 							}
 							else
 							{
-								r=0;
-								s++;
+								t=0;
+								h++;
 								mitile.setTileId(gid);
 								mitile.setSolido(false);
-								frontal[s][r]=mitile;
-								r++;								
+								frontal[h][t]=mitile;
+								t++;								
 							}
 						}
 					}
@@ -210,16 +234,16 @@ void Map::CargarMapa()
 	delete xml;   
 }
 
-
+//Dibuja las diferentes capasa del mapa (salvo la frontal) en la pantalla
 void Map::DibujarMapa(SDL_Surface* screen)
 {
-	//SDL_Rect rect;
 	char buffer[34];
-	int id;
+	Uint32 id=0, i=0, j=0;
 	Imagen* img=new Imagen("resources/graphics/tilesets/camp.png", 19, 8, 0, 255, 0);
-	for(int i=0; i<15; i++)
+	
+	for(i=0; i<15; i++)
 	{
-		for(int j=0; j<20; j++)
+		for(j=0; j<20; j++)
 		{
 			strcpy(buffer, suelo[i][j].getTileId().c_str());
 			id=atoi(buffer)-1;
@@ -235,38 +259,29 @@ void Map::DibujarMapa(SDL_Surface* screen)
 	delete img;
 }
 
+//Dibuja la capa frontal (atravesable por detras)
 void Map::DibujaTras(SDL_Surface* screen)
 {
 	char buffer[34];
-	int id;
+	Uint32 id=0, i=0, j=0;
 	Imagen* img=new Imagen("resources/graphics/tilesets/camp.png", 19, 8, 0, 255, 0);
-	for(int i=0; i<15; i++)
+	
+	for(i=0; i<15; i++)
 	{
-		for(int j=0; j<20; j++)
+		for(j=0; j<20; j++)
 		{
 			strcpy(buffer, frontal[i][j].getTileId().c_str());
 			id=atoi(buffer)-1;
-			img->dibujar(screen, id ,32*j, 32*i);
+			img->dibujar(screen, id ,TWIDTH*j, THEIGHT*i);
 		}
 	}
 	delete img;	
 }
 
-bool Map::getSolido(int x, int y)
+//Comprueba si una baldosa es solida
+bool Map::getSolido(const Uint32 x, const Uint32 y) const
 {
-	#ifdef DEBUG
-	cout<<"Compruebo: ["<<x<<"]["<<y<<"]"<<endl;
-	if(solido[x][y].getSolido()==true)
-	{
-		cout<<x<<", "<<y<<" es solido"<<endl;
-	}
-	#endif
 	return solido[x][y].getSolido();
-}
-
-Tile Map::getTile(int y, int x)
-{
-	return solido[y][x];
 }
 
 

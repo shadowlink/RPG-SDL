@@ -5,44 +5,31 @@
 #include "map.h"
 #include "animacion.h"
 #include "Teclado.h"
+#include "consts.h"
 
-using namespace std;
-enum estados_personaje{
-	PARADO,
-	PARADO_DERECHA,
-	PARADO_ARRIBA,
-	ANDAR_DERECHA,
-	PARADO_ABAJO,
-	PARADO_IZQUIERDA,
-	ANDAR_IZQUIERDA,
-	ANDAR_ARRIBA,
-	ANDAR_ABAJO,   
-	MAX_ESTADOS
-};
 class Actor{
 	public:
-		
-		Actor(string);
+		Actor(const string);
 		~Actor();
-		int Arriba(Map*);
-		int Abajo(Map*);
-		int Derecha(Map*);
-		int Izquierda(Map*);
+		void Arriba(const Map*);
+		void Abajo(const Map*);
+		void Derecha(const Map*);
+		void Izquierda(const Map*);
 		void Dibujar(SDL_Surface*);
 		void cambio_estado(estados_personaje);
-		void Actualizar(Map*);
-		estados_personaje estado_actual(void);
-		int getX();
-		int getY();
+		void Actualizar(const Map*);
+		estados_personaje estado_actual()const;
+		Uint32 getX() const;
+		Uint32 getY() const;
 	private:
-		bool ColisionMapaDerecha(Map*);
-		bool ColisionMapaIzquierda(Map*);
-		bool ColisionMapaArriba(Map*);
-		bool ColisionMapaAbajo(Map*);
+		bool ColisionMapaDerecha(const Map*) const;
+		bool ColisionMapaIzquierda(const Map*) const;
+		bool ColisionMapaArriba(const Map*) const;
+		bool ColisionMapaAbajo(const Map*) const;
 		Teclado teclado;
 		string imagen;
-		int posX;
-		int posY;
+		Uint32 posX;
+		Uint32 posY;
 		estados_personaje estado;
 		Animacion *galeria_animaciones[MAX_ESTADOS];
 };

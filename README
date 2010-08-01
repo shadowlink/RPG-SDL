@@ -1,3 +1,10 @@
+-------------R4---------------
+-Limpiado y organizado el codigo
+-Comentarios añadidos
+-Cambiados los valores por constantes
+-Cambiados int por Uint32 o Sint32 segun el caso
+-Añadidos const a los metodos y parametros necesarios
+
 -------------R3---------------
 -Añadida musica de prueba.
 -Añadido soporte para 2 capas mas en el mapa quedando de la siguiente manera:

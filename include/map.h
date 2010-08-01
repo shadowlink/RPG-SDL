@@ -3,40 +3,39 @@
 #include <iostream>
 #include "images.h"
 #include <irrXML.h>
-
+#include "consts.h"
 using namespace std;
 
 class Tile{
 	public:
 		Tile();
-		Tile(bool, string);
+		Tile(const bool, const string);
 		~Tile();
-		bool getSolido();
-		void setSolido(bool);
-		string getTileId();
-		void setTileId(string);
-		void setX(int);
-		void setY(int);
-		int getX();
-		int getY();
+		bool getSolido() const;
+		void setSolido(const bool);
+		string getTileId() const;
+		void setTileId(const string);
+		void setX(const Uint32);
+		void setY(const Uint32);
+		Uint32 getX()const;
+		Uint32 getY()const;
 	private:
 		bool solido;
 		string TileId;
-		int posX;
-		int posY;
+		Uint32 posX;
+		Uint32 posY;
 };
 
 class Map{
 	public:
-		Map(int);
+		Map(const Uint32);
 		~Map();
 		void CargarMapa();
 		void DibujarMapa(SDL_Surface*);
 		void DibujaTras(SDL_Surface*);
-		Tile getTile(int, int);
-		bool getSolido(int, int);
+		bool getSolido(const Uint32, const Uint32) const;
 	private:
-		int id;
+		Uint32 id;
 		Tile suelo[15][20]; //Primera capa no solida
 		Tile suelo2[15][20]; //Segunda capa no solida
 		Tile solido[15][20]; //Capa solida

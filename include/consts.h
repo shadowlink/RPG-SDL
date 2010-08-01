@@ -14,4 +14,9 @@ enum estados_personaje{
 	MAX_ESTADOS
 };
 
+const Uint32 WIDTH=640;
+const Uint32 HEIGHT=480;
+const Uint32 TWIDTH=32;
+const Uint32 THEIGHT=32;
+
 #endif

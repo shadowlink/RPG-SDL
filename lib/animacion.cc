@@ -1,28 +1,19 @@
-// Listado: Animacion.cpp
-//
-// Implementación de la clase animación
-
 #include <iostream>
-
 #include "animacion.h"
-#include "imagen.h"
-#include "control_animacion.h"
 
 using namespace std;
 
-Animacion::Animacion(char *ruta_imagen, int filas, int columnas,\
-		     char *frames, int retardo_) {
-
-    // Inicializamos las variables de la clase
-
+//Constructor sobrecargado
+Animacion::Animacion(char *ruta_imagen, int filas, int columnas, char *frames, int retardo_) 
+{
     this->imagen = new Imagen(ruta_imagen, filas, columnas);
     this->control_animacion = new Control_Animacion(frames);
     this->retardo_ = retardo_;
-
 }
 
-void Animacion::animar(SDL_Surface *pantalla, int x, int y, int flip) {
-
+//Animacion fija
+void Animacion::animar(SDL_Surface *pantalla, int x, int y, int flip) 
+{
     Uint32 t0;
     Uint32 t1;
     
@@ -32,8 +23,7 @@ void Animacion::animar(SDL_Surface *pantalla, int x, int y, int flip) {
 	control_animacion->avanzar();
 	SDL_Flip(pantalla);
 
-	SDL_FillRect(pantalla, NULL, \
-		     SDL_MapRGB(pantalla->format, 0, 0, 0));
+	SDL_FillRect(pantalla, NULL, SDL_MapRGB(pantalla->format, 0, 0, 0));
 
 	t0 = SDL_GetTicks();
 	t1 = SDL_GetTicks();
@@ -48,8 +38,7 @@ void Animacion::animar(SDL_Surface *pantalla, int x, int y, int flip) {
 
 }
 
-// El control de la temporalidad tiene que se externo
-
+//Recorre los distintos cuadros de la rejilla para crear la animacion
 void Animacion::paso_a_paso(SDL_Surface *pantalla, int x, int y, int flip)
 {
     Uint32 t0 = SDL_GetTicks();
@@ -74,7 +63,8 @@ void Animacion::paso_a_paso(SDL_Surface *pantalla, int x, int y, int flip)
     }
 }
 
-Uint32 Animacion::retardo() {
-
+//Devuelve el retardo de la animacion
+Uint32 Animacion::retardo() 
+{
     return retardo_;
 }
