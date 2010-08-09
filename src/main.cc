@@ -4,14 +4,16 @@
 #include <SDL/SDL_mixer.h>
 #include <iostream>
 #include "actor.h"
+#include "heroe.h"
 #include "map.h"
+#include "camera.h"
 
 using namespace std;
 
 int sincronizar_fps(void) {
     static Uint32 t0;
     static Uint32 tl = SDL_GetTicks();
-    static Uint32 frecuencia = 4000 / 100;
+    static Uint32 frecuencia = 6000 / 100;
     static Uint32 tmp;
 
 #ifdef FPS
@@ -83,7 +85,8 @@ int main(int argc, char *argv[])
     
     //Declaracion de variables
     SDL_Surface *screen;
-    SDL_Event evento;        
+    SDL_Event evento;   
+    Camara camara;     
     Uint32 time;
     Sint32 x0, y0;
 	estados_personaje s0;
@@ -98,7 +101,7 @@ int main(int argc, char *argv[])
 	atexit(SDL_Quit);        
 	
     // Establecemos el modo de pantalla
-	screen= SDL_SetVideoMode(WIDTH, HEIGHT, 0, SDL_ANYFORMAT | SDL_HWSURFACE | SDL_DOUBLEBUF);
+	screen= SDL_SetVideoMode(ANCHO, ALTO, 0, SDL_ANYFORMAT | SDL_HWSURFACE | SDL_DOUBLEBUF);
     if(screen == NULL) {
 		cerr<<"Error al crear la superficie: "<<SDL_GetError()<<endl;
 		exit(1);
@@ -120,39 +123,42 @@ int main(int argc, char *argv[])
 	Mix_FadeInMusic(mainTheme, -1, 1500);
 	Map* mapa=new Map(1);
 	mapa->CargarMapa();
-	mapa->DibujarMapa(screen);
-	Actor heroe("resources/graphics/charasets/heroe.bmp");
-	mapa->DibujaTras(screen);
-	heroe.Dibujar(screen);
+	//mapa->DibujarMapa(screen);
+	Heroe *heroe=new Heroe("resources/graphics/charasets/heroe.bmp");
+	//mapa->DibujaTras(screen);
+	camara.Actualizar(screen, mapa, heroe);
+	heroe->Dibujar(screen);
+	
 	
 	//Bucle principal
 	while(true)
 	{
 		//Guardamos la posicion y estado del heroe al inicio de cada iteración
-		x0=heroe.getX();
-		y0=heroe.getY();
-		s0=heroe.estado_actual();
+		x0=heroe->getX();
+		y0=heroe->getY();
+		s0=heroe->estado_actual();
 		
 		//Control de los FPS
 		time=sincronizar_fps();
 		//Control de eventos
 		salir(evento);
 		//Comprobamos y actualizamos la posicion y estado del heroe si es necesario
-		heroe.Actualizar(mapa);
+		heroe->Actualizar(mapa);
 		
 		//Si el heroe se ha movido actualizamos la pantalla
-		if(x0 != heroe.getX() || y0 != heroe.getY() || s0 != heroe.estado_actual()) 
+		if(x0 != heroe->getX() || y0 != heroe->getY() || s0 != heroe->estado_actual()) 
 		{
 			SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-			mapa->DibujarMapa(screen);	
-			heroe.Dibujar(screen);
-			//Esta capa dibuha los objetos que se pueden traspasar por detras
-			mapa->DibujaTras(screen);
+			//mapa->DibujarMapa(screen);
+			camara.Actualizar(screen, mapa, heroe);	
+			heroe->Dibujar(screen);
+			//Esta capa dibuja los objetos que se pueden traspasar por detras
+			//mapa->DibujaTras(screen);
 		}
 		//camara.update(screen, heroe);
 		//Dibujamos la rejilla en la pantalla
 		SDL_BlitSurface(rejilla, NULL, screen, &posicion);
-		//Actualizamos la panatalla
+		//Actualizamos la pantalla
 		SDL_Flip(screen);
 	}
 }

@@ -108,6 +108,7 @@ void Map::CargarMapa()
 	std::string capa;
 	std::string gid;
 	Tile mitile;
+	char buffer[1024];
 	
 	//Leemos el mapa
 	while(xml && xml->read())
@@ -122,6 +123,11 @@ void Map::CargarMapa()
 				{
 					capa = xml->getAttributeValue("name");
 				}
+				else if (!strcmp("map", xml->getNodeName()))
+				{
+					ancho=atoi(xml->getAttributeValue("width"));
+					alto=atoi(xml->getAttributeValue("height"));
+				}
 				else
 				{
 					//Si encontramos un elemnto "tile" comprobamos en que capa estamos
@@ -131,7 +137,7 @@ void Map::CargarMapa()
 						gid = xml->getAttributeValue("gid");
 						if(capa=="Suelo")
 						{
-							if(x<20) //Final de la linea
+							if(x<30) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								mitile.setSolido(false);
@@ -152,7 +158,7 @@ void Map::CargarMapa()
 						{
 							x=0;
 							y=0;
-							if(t<20) //Final de la linea
+							if(t<30) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								mitile.setSolido(false);
@@ -173,7 +179,7 @@ void Map::CargarMapa()
 						{
 							h=0;
 							t=0;
-							if(x<20) //Final de la linea
+							if(x<30) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								if(gid!="0")
@@ -206,7 +212,7 @@ void Map::CargarMapa()
 						}
 						else if(capa=="Frontal")
 						{
-							if(t<20) //Final de la linea
+							if(t<30) //Final de la linea
 							{
 								mitile.setTileId(gid);
 								mitile.setSolido(false);
@@ -272,7 +278,7 @@ void Map::DibujaTras(SDL_Surface* screen)
 		{
 			strcpy(buffer, frontal[i][j].getTileId().c_str());
 			id=atoi(buffer)-1;
-			img->dibujar(screen, id ,TWIDTH*j, THEIGHT*i);
+			img->dibujar(screen, id ,T_ANCHO*j, T_ALTO*i);
 		}
 	}
 	delete img;	
@@ -284,4 +290,30 @@ bool Map::getSolido(const Uint32 x, const Uint32 y) const
 	return solido[x][y].getSolido();
 }
 
+Tile Map::getSuelo(const Uint32 x, const Uint32 y) const
+{
+	return suelo[x][y];
+}
+
+Tile Map::getSuelo2(const Uint32 x, const Uint32 y) const
+{
+	return suelo2[x][y];
+}
+
+Tile Map::getSueloSolido(const Uint32 x, const Uint32 y) const
+{
+	return solido[x][y];
+}
+
+//Retorna la altura del mapa en celdas
+Uint32 Map::getAlto() const
+{
+	return alto;
+}
+
+//Retorna el ancho del mapa en celdas
+Uint32 Map::getAncho() const
+{
+	return ancho;
+}
 

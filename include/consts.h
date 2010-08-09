@@ -14,9 +14,9 @@ enum estados_personaje{
 	MAX_ESTADOS
 };
 
-const Uint32 WIDTH=640;
-const Uint32 HEIGHT=480;
-const Uint32 TWIDTH=32;
-const Uint32 THEIGHT=32;
+const Uint32 ANCHO=640;
+const Uint32 ALTO=480;
+const Uint32 T_ANCHO=32; //Ancho del Tile
+const Uint32 T_ALTO=32; //Alto del Tile
 
 #endif

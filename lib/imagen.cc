@@ -65,7 +65,7 @@ void Imagen::dibujar(SDL_Surface *superficie, int i, int x, int y, int flip)
     // Comprobamos que el número de imagen indicado sea el correcto
     if(i < 0 || i > (filas * columnas))	
     {
-		cerr << "Imagen::Dibujar = No existe el cuadro: " << i << endl;
+		//cerr << "Imagen::Dibujar = No existe el cuadro: " << i << endl;
 		return;
     }
 	

@@ -48,40 +48,14 @@ Uint32 Actor::getY()const
 	return posY;
 }
 
-//Mueve el personaje hacia arriba
-void Actor::Arriba(const Map* mapa)
+void Actor::setX(const int x)
 {
-	if(!ColisionMapaArriba(mapa))
-	{
-		posY-=8;
-	}
+	posX=x;
 }
 
-//Mueve el personaje hacia abajo
-void Actor::Abajo(const Map* mapa)
+void Actor::setY(const int y)
 {
-	if(!ColisionMapaAbajo(mapa))
-	{
-		posY+=8;
-	}
-}
-
-//Mueve el personaje hacia la derecha
-void Actor::Derecha(const Map* mapa)
-{
-	if(!ColisionMapaDerecha(mapa))
-	{
-			posX+=8;			
-	}
-}
-
-//Mueve el personaje hacia la izquierda
-void Actor::Izquierda(const Map* mapa)
-{
-	if(!ColisionMapaIzquierda(mapa))
-	{
-		posX-=8;
-	}
+	posY=y;
 }
 
 //Dibuja la animacion del personaje segun su estado actual
@@ -149,26 +123,26 @@ bool Actor::ColisionMapaDerecha(const Map* mapa) const
 
 	//Comprobamos si estamos en el centro de una baldosa
 	//Calculamos la posicion de la baldosa a comprobar en consecuencia
-	if(posX%TWIDTH!=0) //No lo estamos
+	if(posX%T_ANCHO!=0) //No lo estamos
 	{
-		compruebaX=floor((posX/TWIDTH)+1);
+		compruebaX=floor((posX/T_ANCHO)+1);
 	}
 	else //Lo estamos
 	{
-		compruebaX=posX/TWIDTH+1;	
+		compruebaX=posX/T_ANCHO+1;	
 	}	
-
+cout<<"CompruebaX: "<<compruebaX<<endl;
 	//Si estamos dentro de los limites del mapa
-	if(posX+TWIDTH<WIDTH-TWIDTH)
+	if(posX+T_ANCHO<mapa->getAncho()-T_ANCHO)
 	{
 		//Comprobamos si la baldosa que hemos calculado es solida
-		if(mapa->getSolido(posY/THEIGHT, compruebaX))
+		if(mapa->getSolido(posY/T_ALTO, compruebaX))
 		{
 			solido=true;
 		}
-		else if (posY%THEIGHT!=0)
+		else if (posY%T_ALTO!=0)
 		{
-			if (mapa->getSolido((posY/THEIGHT)+1, compruebaX))
+			if (mapa->getSolido((posY/T_ALTO)+1, compruebaX))
 				solido=true;
 		}
 	}
@@ -185,24 +159,24 @@ bool Actor::ColisionMapaIzquierda(const Map* mapa) const
 	bool solido=false;
 	Uint32 compruebaX;
 	
-	if(posX%TWIDTH!=0) //Si no es entero
+	if(posX%T_ANCHO!=0) //Si no es entero
 	{
-		compruebaX=floor((posX/TWIDTH));
+		compruebaX=floor((posX/T_ANCHO));
 	}
 	else // si es entero
 	{
-		compruebaX=posX/TWIDTH-1;	
+		compruebaX=posX/T_ANCHO-1;	
 	}	
 
-	if(posX>TWIDTH)
+	if(posX>T_ANCHO)
 	{
-		if(mapa->getSolido(posY/THEIGHT, compruebaX))
+		if(mapa->getSolido(posY/T_ALTO, compruebaX))
 		{
 			solido=true;
 		}
-		else if (posY%THEIGHT!=0)
+		else if (posY%T_ALTO!=0)
 		{
-			if (mapa->getSolido((posY/THEIGHT)+1, compruebaX))
+			if (mapa->getSolido((posY/T_ALTO)+1, compruebaX))
 				solido=true;
 		}
 	}
@@ -218,24 +192,24 @@ bool Actor::ColisionMapaArriba(const Map* mapa) const
 	bool solido=false;
 	Uint32 compruebaY;
 	
-	if(posY%THEIGHT!=0) //Si no es entero
+	if(posY%T_ALTO!=0) //Si no es entero
 	{
-		compruebaY=floor((posY/THEIGHT));
+		compruebaY=floor((posY/T_ALTO));
 	}
 	else // si es entero
 	{
-		compruebaY=posY/THEIGHT-1;	
+		compruebaY=posY/T_ALTO-1;	
 	}	
 	
-	if(posY>THEIGHT)
+	if(posY>T_ALTO)
 	{
-		if(mapa->getSolido(compruebaY, posX/TWIDTH))
+		if(mapa->getSolido(compruebaY, posX/T_ANCHO))
 		{
 			solido=true;
 		}
-		else if (posX%TWIDTH!=0)
+		else if (posX%T_ANCHO!=0)
 		{
-			if (mapa->getSolido(compruebaY, (posX/TWIDTH)+1))
+			if (mapa->getSolido(compruebaY, (posX/T_ANCHO)+1))
 				solido=true;
 		}
 	}
@@ -250,24 +224,24 @@ bool Actor::ColisionMapaAbajo(const Map* mapa) const
 	bool solido=false;
 	Uint32 compruebaY;
 	
-	if(posY%THEIGHT!=0) //Si no es entero
+	if(posY%T_ALTO!=0) //Si no es entero
 	{
-		compruebaY=floor((posY/THEIGHT));
+		compruebaY=floor((posY/T_ALTO));
 	}
 	else // si es entero
 	{
-		compruebaY=(posY/THEIGHT)+1;	
+		compruebaY=(posY/T_ALTO)+1;	
 	}	
 
-	if(posY+THEIGHT<HEIGHT-THEIGHT)
+	if(posY+T_ALTO<mapa->getAlto()-T_ALTO)
 	{
-		if(mapa->getSolido(compruebaY, posX/TWIDTH))
+		if(mapa->getSolido(compruebaY, posX/T_ANCHO))
 		{
 			solido=true;
 		}
-		else if (posX%TWIDTH!=0)
+		else if (posX%T_ANCHO!=0)
 		{
-			if (mapa->getSolido(compruebaY, (posX/TWIDTH)+1))
+			if (mapa->getSolido(compruebaY, (posX/T_ANCHO)+1))
 				solido=true;
 		}
 	}
@@ -277,121 +251,4 @@ bool Actor::ColisionMapaAbajo(const Map* mapa) const
 	return solido;
 }
 
-//Actualiza el estado del personaje a partir de una maquina de estados
-void Actor::Actualizar(const Map* mapa)
-{
-	teclado.actualizar();
-	
-	//Construimos una maquina de estados y sus transiciones
-	switch(estado_actual()) 
-	{	
-	 case PARADO:	 
-		 if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA))
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);
-		 break;
-	 case PARADO_DERECHA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA)) 
-		 {
-			Derecha(mapa);
-			cambio_estado(ANDAR_DERECHA);
-		 } 
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA))
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);  
-		 break;
-	 case PARADO_IZQUIERDA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-		 {
-			Izquierda(mapa);
-			cambio_estado(ANDAR_IZQUIERDA);
-		 } 
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 break;		
-	 case PARADO_ARRIBA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-		 {
-			Arriba(mapa);
-			cambio_estado(ANDAR_ARRIBA);
-		 }
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 break;	
-	 case PARADO_ABAJO:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-		 {
-			Abajo(mapa);
-			cambio_estado(ANDAR_ABAJO);
-		 }
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 break;	
-	 case ANDAR_DERECHA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(ANDAR_ABAJO);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			Derecha(mapa);
-		 break;	
-	 break;
-	 case ANDAR_IZQUIERDA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA))
-			Izquierda(mapa);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 break;	
-	 break;
-	 case ANDAR_ARRIBA:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			Arriba(mapa);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			cambio_estado(PARADO_ABAJO);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-		 break;	
-	 break;
-	 case ANDAR_ABAJO:
-		 if(teclado.pulso(Teclado::TECLA_SUBIR))
-			cambio_estado(PARADO_ARRIBA);
-		 else if(teclado.pulso(Teclado::TECLA_IZQUIERDA)) 
-			cambio_estado(PARADO_IZQUIERDA);
-		 else if(teclado.pulso(Teclado::TECLA_BAJAR))
-			Abajo(mapa);
-		 else if(teclado.pulso(Teclado::TECLA_DERECHA))
-			cambio_estado(PARADO_DERECHA);
-			 break;	
-	 break;
-	 default:
-		 cerr << "No se conoce este estado " <<estado_actual()<< endl;
-	 }	
-}
+
