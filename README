@@ -1,3 +1,6 @@
+-------------R6---------------
+-Arreglado el bug del scroll, debería funcionar perfectamente
+
 -------------R5---------------
 -Implementado el scroll (con errores)
 -Derivadas las clases Heroe y Enemigo a partir de la clase Actor

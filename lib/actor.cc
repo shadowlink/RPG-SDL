@@ -59,43 +59,43 @@ void Actor::setY(const int y)
 }
 
 //Dibuja la animacion del personaje segun su estado actual
-void Actor::Dibujar(SDL_Surface* screen)
+void Actor::Dibujar(SDL_Surface* screen, Sint32 scrollx, Sint32 scrolly)
 {
 	switch(estado) {
 		case PARADO:
-			galeria_animaciones[PARADO_DERECHA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[PARADO_DERECHA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 			estado = PARADO_DERECHA;
 		break;
 		case PARADO_DERECHA:
-			galeria_animaciones[PARADO_DERECHA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[PARADO_DERECHA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 
 		case PARADO_IZQUIERDA:
-			galeria_animaciones[PARADO_IZQUIERDA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[PARADO_IZQUIERDA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 
 		case PARADO_ARRIBA:
-			galeria_animaciones[PARADO_ARRIBA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[PARADO_ARRIBA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 
 		case PARADO_ABAJO:
-			galeria_animaciones[PARADO_ABAJO]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[PARADO_ABAJO]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 		
 		case ANDAR_DERECHA:
-			galeria_animaciones[ANDAR_DERECHA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[ANDAR_DERECHA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 		
 		case ANDAR_IZQUIERDA:
-			galeria_animaciones[ANDAR_IZQUIERDA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[ANDAR_IZQUIERDA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 		
 		case ANDAR_ARRIBA:
-			galeria_animaciones[ANDAR_ARRIBA]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[ANDAR_ARRIBA]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 		
 		case ANDAR_ABAJO:
-			galeria_animaciones[ANDAR_ABAJO]->paso_a_paso(screen, posX, posY);
+			galeria_animaciones[ANDAR_ABAJO]->paso_a_paso(screen, posX-scrollx, posY-scrolly);
 		break;
 		 
 		default:
@@ -131,7 +131,7 @@ bool Actor::ColisionMapaDerecha(const Map* mapa) const
 	{
 		compruebaX=posX/T_ANCHO+1;	
 	}	
-cout<<"CompruebaX: "<<compruebaX<<endl;
+
 	//Si estamos dentro de los limites del mapa
 	if(posX+T_ANCHO<mapa->getAncho()-T_ANCHO)
 	{

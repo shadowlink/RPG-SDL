@@ -10,7 +10,7 @@ class Actor{
 	public:
 		Actor(const string);
 		~Actor();
-		void Dibujar(SDL_Surface*);
+		void Dibujar(SDL_Surface*, Sint32, Sint32);
 		void cambio_estado(estados_personaje);
 		estados_personaje estado_actual()const;
 		Uint32 getX() const;

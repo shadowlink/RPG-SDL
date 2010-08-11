@@ -305,6 +305,11 @@ Tile Map::getSueloSolido(const Uint32 x, const Uint32 y) const
 	return solido[x][y];
 }
 
+Tile Map::getSueloTras(const Uint32 x, const Uint32 y) const
+{
+	return frontal[x][y];
+}
+
 //Retorna la altura del mapa en celdas
 Uint32 Map::getAlto() const
 {

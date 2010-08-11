@@ -39,6 +39,7 @@ class Map{
 		Tile getSuelo(const Uint32 x, const Uint32 y) const;
 		Tile getSuelo2(const Uint32 x, const Uint32 y) const;
 		Tile getSueloSolido(const Uint32 x, const Uint32 y) const;
+		Tile getSueloTras(const Uint32 x, const Uint32 y) const;
 	private:
 		Uint32 id;
 		Uint32 ancho;

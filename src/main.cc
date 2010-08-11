@@ -123,11 +123,11 @@ int main(int argc, char *argv[])
 	Mix_FadeInMusic(mainTheme, -1, 1500);
 	Map* mapa=new Map(1);
 	mapa->CargarMapa();
-	//mapa->DibujarMapa(screen);
+
 	Heroe *heroe=new Heroe("resources/graphics/charasets/heroe.bmp");
-	//mapa->DibujaTras(screen);
+	mapa->DibujaTras(screen);
 	camara.Actualizar(screen, mapa, heroe);
-	heroe->Dibujar(screen);
+	heroe->Dibujar(screen, 0, 0);
 	
 	
 	//Bucle principal
@@ -149,13 +149,10 @@ int main(int argc, char *argv[])
 		if(x0 != heroe->getX() || y0 != heroe->getY() || s0 != heroe->estado_actual()) 
 		{
 			SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-			//mapa->DibujarMapa(screen);
 			camara.Actualizar(screen, mapa, heroe);	
-			heroe->Dibujar(screen);
 			//Esta capa dibuja los objetos que se pueden traspasar por detras
-			//mapa->DibujaTras(screen);
 		}
-		//camara.update(screen, heroe);
+
 		//Dibujamos la rejilla en la pantalla
 		SDL_BlitSurface(rejilla, NULL, screen, &posicion);
 		//Actualizamos la pantalla
